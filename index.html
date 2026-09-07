@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quran Companion</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="loginPage" class="auth-page">
+  <div class="auth-box">
+    <h1>🕌 Quran Companion</h1><p>Continue your Quran journey</p>
+    <input type="email" id="loginEmail" placeholder="Email">
+    <div class="password-box">
+    <input
+        type="password"
+        id="loginPassword"
+        placeholder="Password"
+    >
+
+    <button
+        type="button"
+        onclick="togglePassword('loginPassword')"
+    >
+        👁️
+    </button>
+</div>
+    <button type="button" onclick="login()">Login</button>
+    <button
+    type="button"
+    class="text-button"
+    onclick="showForgotPassword()"
+>
+    Forgot Password?
+</button>
+    <p id="loginMessage"></p>
+    <p class="switch">Don't have an account? <button type="button" class="text-button" onclick="showSignup()">Sign Up</button></p>
+  </div>
+</div>
+<div id="signupPage" class="auth-page hidden">
+  <div class="auth-box">
+    <h1>Create Account</h1><p>Start your Quran journey</p>
+    <input type="text" id="signupName" placeholder="Your name">
+    <input type="email" id="signupEmail" placeholder="Email">
+    <div class="password-box">
+    <input
+        type="password"
+        id="signupPassword"
+        placeholder="Password"
+    >
+
+    <button
+        type="button"
+        onclick="togglePassword('signupPassword')"
+    >
+        👁️
+    </button>
+</div>
+<div id="forgotPasswordPage" class="auth-page hidden">
+
+    <div class="auth-box">
+
+        <h1>Reset Password</h1>
+        <p>Enter your account email</p>
+
+        <input
+            type="email"
+            id="resetEmail"
+            placeholder="Email"
+        >
+
+        <input
+            type="password"
+            id="newPassword"
+            placeholder="New password"
+        >
+
+        <button
+            type="button"
+            onclick="resetPassword()"
+        >
+            Reset Password
+        </button>
+
+        <button
+            type="button"
+            class="text-button"
+            onclick="showLogin()"
+        >
+            ← Back to Login
+        </button>
+
+        <p id="resetMessage"></p>
+
+    </div>
+
+</div>
+<div class="password-box">
+    <input
+        type="password"
+        id="signupConfirmPassword"
+        placeholder="Confirm Password"
+    >
+
+    <button
+        type="button"
+        onclick="togglePassword('signupConfirmPassword')"
+    >
+        👁️
+    </button>
+</div>
+<div id="passwordStrength" class="password-strength"></div>
+    <button type="button" onclick="signup()">Create Account</button>
+    <p id="signupMessage"></p>
+    <p class="switch">Already have an account? <button type="button" class="text-button" onclick="showLogin()">Login</button></p>
+  </div>
+</div>
+<div id="app" class="hidden">
+<header class="navbar">
+  <h2>🕌 Quran Companion</h2>
+  <nav>
+    <button type="button" onclick="showSection('home')">Home</button>
+    <button type="button" onclick="showSection('profile')">
+    👤 Profile
+</button>
+    <div class="journey-card">
+    <h2>📊 Your Quran Journey</h2>
+
+    <div class="stats-grid">
+
+        <div class="stat-item">
+            <strong id="ayahsReadCount">0</strong>
+            <span>Ayahs</span>
+        </div>
+
+        <div class="stat-item">
+            <strong id="bookmarksCount">0</strong>
+            <span>Bookmarks</span>
+        </div>
+
+        <div class="stat-item">
+            <strong id="surahsOpenedCount">0</strong>
+            <span>Surahs</span>
+        </div>
+
+        <div class="stat-item">
+            <strong id="readingStreak">0</strong>
+            <span>Day Streak</span>
+        </div>
+
+    </div>
+</div>
+    <button type="button" onclick="showSection('quran')">Quran</button>
+    <button type="button" onclick="showSection('qibla')">
+    🧭 Qibla
+</button>
+    <button type="button" onclick="showSection('juz')">Juz</button>
+    <button type="button" onclick="showSection('bookmarks')">Bookmarks</button>
+    <button type="button" onclick="showSection('settings')">Settings</button>
+    <button type="button" onclick="showSection('prayer')">🕌 Prayer</button>
+    <button type="button" onclick="logout()">Logout</button>
+  </nav>
+</header>
+<main>
+<section id="home" class="section">
+  <div class="hero">
+    <h1>Assalamu Alaikum 🌙</h1>
+    <p>Welcome to your Quran Companion. Read, listen, save and continue your journey.</p>
+    <button type="button" onclick="continueReading()">📖 Continue Reading</button>
+    <button type="button" onclick="showSection('quran')">📚 Browse Quran</button>
+  </div>
+  <div class="card" id="randomAyahBox">
+    <h2>✨ Random Ayah</h2><p>Get a random ayah from the Quran.</p>
+    <button type="button" onclick="randomAyah()">Get Random Ayah</button>
+  </div>
+  <div class="card"><h2>📌 Your Journey</h2><p id="homeProgress">Open a Surah to begin reading.</p></div>
+</section>
+<section id="quran" class="section hidden">
+  <h1>📖 Quran</h1><p>All 114 Surahs from the Quran.</p>
+  <input type="search" id="surahSearch" placeholder="🔎 Search Surah..." oninput="searchSurahs()">
+  <div id="surahList"><div class="card"><p>Loading Surahs...</p></div></div>
+</section>
+<section id="juz" class="section hidden">
+  <h1>📚 Juz</h1><p>Choose one of the 30 Juz.</p><div id="juzList"></div>
+</section>
+<section id="reader" class="section hidden">
+    <div class="surah-info">
+    <h2 id="surahTitle">Al-Fatihah</h2>
+    <p class="surah-arabic">الفاتحة</p>
+
+    <div class="surah-details">
+        <span>📖 Surah 1</span>
+        <span>🕌 Makki</span>
+        <span>🔢 7 Ayahs</span>
+    </div>
+
+    <p class="surah-meaning">Meaning: The Opening</p>
+</div>
+<div class="bismillah">
+    بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
+</div>
+
+<div class="reading-progress">
+    <div class="progress-label">
+        <span>Reading Progress</span>
+        <span>0%</span>
+    </div>
+
+    <div class="progress-bar">
+        <div class="progress-fill"></div>
+    </div>
+</div>
+  <button type="button" onclick="showSection('quran')">← Back to Quran</button>
+  <div class="reader-header"><h1 id="readerTitle">Quran Reader</h1><p id="readerInfo"></p></div>
+  <div class="card"><h3>🎧 Audio</h3><audio id="surahAudio" controls preload="none"></audio><audio id="ayahAudio" controls preload="none"></audio></div>
+  <div id="ayahContainer"></div>
+  <div class="card">
+    <button type="button" id="previousSurahButton" onclick="previousSurah()">← Previous Surah</button>
+    <button type="button" id="nextSurahButton" onclick="nextSurah()">Next Surah →</button>
+  </div>
+</section>
+<section id="bookmarks" class="section hidden"><h1>❤️ Bookmarks</h1><p>Your saved ayahs.</p><div id="bookmarkList"></div></section>
+<section id="settings" class="section hidden">
+    <section id="profile" class="section hidden">
+
+    <h1>👤 My Profile</h1>
+
+    <div class="profile-card">
+
+        <div class="profile-avatar">
+            👤
+        </div>
+
+        <h2 id="profileName">Quran Companion User</h2>
+        <p id="profileEmail">Your account</p>
+
+        <div class="profile-stats">
+
+            <div>
+                <strong id="profileBookmarks">0</strong>
+                <span>Bookmarks</span>
+            </div>
+
+            <div>
+                <strong id="profileAyahs">0</strong>
+                <span>Ayahs Read</span>
+            </div>
+
+            <div>
+                <strong id="profileSurahs">0</strong>
+                <span>Surahs</span>
+            </div>
+
+        </div>
+
+        <button type="button" onclick="showSection('settings')">
+            ⚙️ Account Settings
+        </button>
+
+    </div>
+
+</section>
+    <section id="prayer" class="section hidden">
+        <section id="qibla" class="section hidden">
+
+    <h1>🧭 Qibla Direction</h1>
+
+    <p>Lagos, Nigeria</p>
+
+    <div class="card">
+        <h2>Find the Qibla</h2>
+
+        <div id="qiblaInfo">
+            <p>Qibla direction from Lagos:</p>
+            <h2>🕋 Kaaba</h2>
+            <p>Direction: 103° from North</p>
+        </div>
+    </div>
+
+</section>
+
+    <h1>🕌 Prayer Times</h1>
+
+    <p>Lagos, Nigeria</p>
+
+    <div class="card">
+        <h2>Today's Prayer Times</h2>
+
+        <div id="prayerTimes">
+            <p>Loading prayer times...</p>
+        </div>
+    </div>
+
+</section>
+
+    
+  <h1>⚙️ Settings</h1>
+  <div class="card"><h2>🌙 Appearance</h2><button type="button" onclick="toggleDarkMode()">Toggle Dark Mode</button></div>
+  <div class="card"><h2>🔤 Arabic Text Size</h2><p>Change the size of Quran Arabic text.</p><button type="button" onclick="changeFontSize(-2)">A−</button><button type="button" onclick="changeFontSize(2)">A+</button><button type="button" onclick="resetFontSize()">Reset</button><p id="fontSizeLabel"></p></div>
+  <div class="card"><h2>ℹ️ About</h2><p>Quran Companion uses the Al Quran Cloud API for Quran data.</p><p>The current login is a front-end demo. Do not enter a real password.</p></div>
+</section>
+</main>
+<footer><p>🕌 Quran Companion</p><p>Read • Listen • Reflect</p></footer>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
